@@ -2,7 +2,8 @@
 
 A platformer 🏝️ game.
 
-The controls are
+The controls are:
+
 ![<WASD icon>](<https://toppng.com/public/uploads/thumbnail/wasd-keys-png-wasd-keys-11562858827zsffwllohq.png>)
 
 W & S don't do much
