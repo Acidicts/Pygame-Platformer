@@ -83,6 +83,7 @@ class Game:
     def load_level(self, map_id):
         self.transition = -30
         self.enemies.clear()
+        self.projectiles.clear()
 
         self.tile_map.load('Assets/maps/' + str(map_id) + '.json')
 
