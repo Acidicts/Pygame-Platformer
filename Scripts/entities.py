@@ -160,6 +160,7 @@ class Player(PhysicsEntity):
         self.jumps = self.max_jump
         self.wall_slide = False
         self.dashing = 0
+        self.power_up_time = None
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)

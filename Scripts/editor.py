@@ -24,6 +24,7 @@ class Editor:
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
+            'power_ups': load_images('power_ups'),
             'spawners': load_images('tiles/spawners'),
         }
 

@@ -7,6 +7,8 @@ BASE_IMG_PATH = "Assets/images/"
 def load_image(path):
     img = pygame.image.load(BASE_IMG_PATH + path).convert()
     img.set_colorkey((0, 0, 0))
+    if "icon_" in path:
+        img = pygame.transform.scale(img, (16, 16))
     return img
 
 

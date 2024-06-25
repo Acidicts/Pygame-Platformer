@@ -34,6 +34,7 @@ class Game:
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
             'player': load_image('entities/player.png'),
+            'power_ups': load_images('power_ups'),
             'background': load_image('background.png'),
             'enemy/idle': Animation(load_images('entities/enemy/idle')),
             'enemy/run': Animation(load_images('entities/enemy/run')),
@@ -76,7 +77,7 @@ class Game:
 
         self.tile_map = Tile_map(self, tile_size=16)
 
-        self.level = 0
+        self.level = 4
         self.load_level(self.level)
         self.transition = -30
 
@@ -104,6 +105,7 @@ class Game:
         pygame.mixer.music.play(-1)
 
         self.sfx['ambience'].play(-1)
+        self.dead = 0
 
         while self.running:
             self.display.fill((0, 0, 0, 0))
@@ -119,7 +121,7 @@ class Game:
             if self.transition < 0:
                 self.transition += 1
 
-            if self.dead:
+            if self.dead < 0:
                 self.dead += 1
                 if self.dead > 40:
                     self.dead = 0
@@ -169,16 +171,17 @@ class Game:
                         self.dead += 1
                         self.sfx['hit'].play()
                         self.screenshake = max(16, self.screenshake)
-                        for i in range(30):
-                            angle = random.random() * math.pi * 2
-                            speed = random.random() * 5
-                            self.sparks.append(Spark(self.player.rect().center,
-                                                     angle, 2 + random.random()))
-                            self.particles.append(Particle(self, 'particle',
-                                                           self.player.rect().center,
-                                                           velocity=[math.cos(angle + math.pi) * speed * 0.5,
-                                                                     math.sin(angle + math.pi) * speed * 0.5],
-                                                           frame=random.randint(0, 7)))
+                        if self.dead > 0:
+                            for i in range(30):
+                                angle = random.random() * math.pi * 2
+                                speed = random.random() * 5
+                                self.sparks.append(Spark(self.player.rect().center,
+                                                         angle, 2 + random.random()))
+                                self.particles.append(Particle(self, 'particle',
+                                                               self.player.rect().center,
+                                                               velocity=[math.cos(angle + math.pi) * speed * 0.5,
+                                                                         math.sin(angle + math.pi) * speed * 0.5],
+                                                               frame=random.randint(0, 7)))
 
             for spark in self.sparks.copy():
                 kill = spark.update()
@@ -221,6 +224,33 @@ class Game:
                         self.movement[0] = False
                     if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                         self.movement[1] = False
+
+            # Iterate over all tiles in the tile map
+            for loc in self.tile_map.tile_map.copy():
+                tile = self.tile_map.tile_map[loc]
+                # Check if the tile is a power-up
+                if tile['type'] == 'power_ups':
+                    # Create a rect for the tile
+                    tile_rect = pygame.Rect(tile['pos'][0] * self.tile_map.tile_size,
+                                            tile['pos'][1] * self.tile_map.tile_size, self.tile_map.tile_size,
+                                            self.tile_map.tile_size)
+                    # Check if the player collides with the power-up
+                    if self.player.rect().colliderect(tile_rect):
+                        # Apply the power-up effect
+                        if tile['variant'] == 0:
+                            self.player.max_jump = 2
+                            self.player.power_up_time = pygame.time.get_ticks()
+                            print(self.player.power_up_time)
+                        elif tile['variant'] == 1:
+                            self.dead -= 1
+                        # Remove the power-up from the tile map
+                        del self.tile_map.tile_map[loc]
+
+            if self.player.power_up_time is not None and pygame.time.get_ticks() - self.player.power_up_time >= 5000:
+                print(pygame.time.get_ticks() - self.player.power_up_time)
+                self.player.max_jump = 1  # Reset to normal jump
+                self.player.power_up_time = None  # Reset the power-up time
+
 
             if self.transition:
                 transition_surf = pygame.Surface(self.display.get_size())
