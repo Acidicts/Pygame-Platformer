@@ -8,3 +8,6 @@ The controls are:
 
 W & S don't do much
 but the space key is jump and x is dash
+
+
+The vercel link doesn't work
