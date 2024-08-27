@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pygame platformer"
+version = "0.1.0"
+description = ""
+authors = ["Acidicts <111660544+Acidicts@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = "^2.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pygame = "^2.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

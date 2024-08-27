@@ -77,7 +77,7 @@ class Game:
 
         self.tile_map = Tile_map(self, tile_size=16)
 
-        self.level = 4
+        self.level = 0
         self.load_level(self.level)
         self.transition = -30
 
